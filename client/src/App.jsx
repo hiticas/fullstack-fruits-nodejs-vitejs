@@ -5,29 +5,28 @@ import './App.css'
 import axios from "axios";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [title, setTitle] = useState("");
+  const [subtitle, setSubtitle] = useState("");
   const [array, setArray] = useState([]);
 
   const fetchAPI = async () => {
   try {
     const response = await axios.get("https://fullstack-fruits-nodejs-vitejs.vercel.app/api");
-    console.log("Full response:", response);           // ← see everything
-    console.log("Fruits array:", response.data.fruits);
-    setArray(response.data.fruits || []);              // fallback empty array
+    console.log("Full response:", response); 
+
+    setTitle(response.data.title || "");
+    setSubtitle(response.data.subtitle || "");
+    setArray(response.data.fruits || []);
   } catch (error) {
     console.error("Fetch error:", error.message);
     if (error.response) {
-      // Server responded with error (e.g. 4xx/5xx)
       console.error("Response data:", error.response.data);
       console.error("Status:", error.response.status);
     } else if (error.request) {
-      // No response received (network/CORS fail)
       console.error("No response received - likely CORS or network issue", error.request);
     } else {
       console.error("Axios setup error:", error.message);
     }
-    // Optional: show error on UI
-    // setArray(["Failed to load fruits"]);
   }
 };
 
@@ -37,21 +36,10 @@ function App() {
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
+      <h1>{title}</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
         <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
+          {subtitle}
         </p>
         {array.map((fruit, index) => (
           <div key={index}>
@@ -60,9 +48,6 @@ function App() {
           </div>
         ))}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
