@@ -9,10 +9,27 @@ function App() {
   const [array, setArray] = useState([]);
 
   const fetchAPI = async () => {
-    const response = await axios.get("http://localhost:8080/api");
-    setArray(response.data.fruits);
-    console.log(response.data.fruits);
-  };
+  try {
+    const response = await axios.get("https://fullstack-fruits-nodejs-vitejs.vercel.app/api");
+    console.log("Full response:", response);           // ← see everything
+    console.log("Fruits array:", response.data.fruits);
+    setArray(response.data.fruits || []);              // fallback empty array
+  } catch (error) {
+    console.error("Fetch error:", error.message);
+    if (error.response) {
+      // Server responded with error (e.g. 4xx/5xx)
+      console.error("Response data:", error.response.data);
+      console.error("Status:", error.response.status);
+    } else if (error.request) {
+      // No response received (network/CORS fail)
+      console.error("No response received - likely CORS or network issue", error.request);
+    } else {
+      console.error("Axios setup error:", error.message);
+    }
+    // Optional: show error on UI
+    // setArray(["Failed to load fruits"]);
+  }
+};
 
   useEffect(() => {
     fetchAPI();
