@@ -25,8 +25,8 @@ app.get('/api', (req, res) => {
 });
 
 // For local testing only – comment out or conditional on Vercel
-// if (process.env.NODE_ENV !== 'production') {
-//   app.listen(8080, () => console.log('Server running on port 8080'));
-// }
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(8080, () => console.log('Server running on port 8080'));
+}
 
 module.exports = app;
