@@ -3,11 +3,12 @@ const cors = require('cors');
 
 const app = express();
 
+// CORS config – fixed trailing slash issue
 const corsOptions = {
   origin: [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://fullstack-fruits.netlify.app",  // ← removed trailing slash
+    "https://fullstack-fruits.netlify.app",   // no trailing slash
     "https://*.netlify.app"
   ],
   credentials: true,
@@ -17,7 +18,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Explicitly handle OPTIONS preflight (very important on Vercel!)
+// Handle OPTIONS preflight explicitly (helps ensure CORS works)
 app.options('*', cors(corsOptions));
 
 // Your route
@@ -25,12 +26,12 @@ app.get('/api', (req, res) => {
   res.json({ fruits: ["apple", "orange", "banana"] });
 });
 
-// Remove this for Vercel – it crashes serverless functions
-// app.listen(8080, () => console.log(`Server running on port 8080`));
+// NO app.listen() here – Vercel doesn't need/want it
 
-// Keep for local testing if you want (optional)
-// if (process.env.NODE_ENV !== 'production') {
-//   app.listen(8080, () => console.log('Local server on 8080'));
-// }
+// Optional: local testing only
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 8080;
+  app.listen(PORT, () => console.log(`Local dev server on port ${PORT}`));
+}
 
 module.exports = app;
